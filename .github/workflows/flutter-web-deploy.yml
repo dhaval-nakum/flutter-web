@@ -1,52 +1,32 @@
-name: Deploy Flutter Web to GitHub Pages
+name: Build and Deploy Flutter Web
 
 on:
   push:
     branches:
-      - main # or the branch you want to trigger this on
+      - main
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout the repository
-      uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: Set up Flutter
-      uses: subosito/flutter-action@v2
-      with:
-        flutter-version: 'stable'
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.x.x' # Use the appropriate Flutter version
 
-    - name: Install dependencies
-      run: flutter pub get
+      - name: Install dependencies
+        run: flutter pub get
 
-    - name: Build Flutter Web
-      run: flutter build web --release
+      - name: Build Flutter web app
+        run: flutter build web --release
 
-    - name: Deploy to GitHub Pages
-      uses: peaceiris/actions-gh-pages@v3
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: build/web
-        publish_branch: gh-pages
-
-
-
-# name: Gh-Pages
-
-# on:
-#   push:
-#     branches: [ main ]
-
-# jobs:
-#   build:
-#     runs-on: ubuntu-latest
-
-#     steps:
-#       - uses: actions/checkout@v3
-#       - uses: subosito/flutter-action@v2
-#       - uses: bluefireteam/flutter-gh-pages@v8
-#         with:
-#           baseHref: /flutter-web/
-#           webRenderer: canvaskit
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./build/web
+          publish_branch: gh-pages
